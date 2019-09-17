@@ -1,0 +1,44 @@
+# SPDX-License-Identifier: MIT
+
+name: CI Windows
+
+on:
+  push:
+    branches:
+    - master
+    - feature/*
+
+jobs:
+  local-build:
+    name: Local build
+    strategy:
+      matrix:
+        os: [windows-2019]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Set up Go
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13
+    - name: Set up task
+      env:
+        TASK_VERSION: 2.6.0
+      shell: powershell
+      run: |
+        iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
+        scoop bucket add extras
+        scoop install task@$env:TASK_VERSION
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Clean
+      run: |
+        %HOMEDRIVE%%HOMEPATH%/scoop/apps/task/current/task local:clean
+    - name: Prepare
+      run: |
+        %HOMEDRIVE%%HOMEPATH%/scoop/apps/task/current/task local:prepare
+    - name: Build
+      run: |
+        %HOMEDRIVE%%HOMEPATH%/scoop/apps/task/current/task local:build
+    - name: Test
+      run: |
+        %HOMEDRIVE%%HOMEPATH%/scoop/apps/task/current/task local:test

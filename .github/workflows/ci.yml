@@ -1,0 +1,63 @@
+# SPDX-License-Identifier: MIT
+
+name: CI
+
+on:
+  push:
+    branches:
+    - master
+    - feature/*
+
+jobs:
+  docker-build:
+    name: Docker build
+    strategy:
+      matrix:
+        os: [ubuntu-16.04, ubuntu-18.04]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Set up task
+      env:
+        TASK_VERSION: 2.6.0
+      run: |
+        sudo bash -c "curl -sL https://taskfile.dev/install.sh | bash -s -- -b /usr/local/bin v${TASK_VERSION}"
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Build
+      run: |
+        task docker:build
+    - name: Test
+      run: |
+        task docker:test
+
+  local-build:
+    name: Local build
+    strategy:
+      matrix:
+        os: [ubuntu-16.04, ubuntu-18.04]
+        go: [1.11, 1.12, 1.13]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Set up Go
+      uses: actions/setup-go@v1
+      with:
+        go-version: ${{ matrix.go }}
+    - name: Set up task
+      env:
+        TASK_VERSION: 2.6.0
+      run: |
+        sudo bash -c "curl -sL https://taskfile.dev/install.sh | bash -s -- -b /usr/local/bin v${TASK_VERSION}"
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Clean
+      run: |
+        task local:clean
+    - name: Prepare
+      run: |
+        task local:prepare
+    - name: Build
+      run: |
+        task local:build
+    - name: Test
+      run: |
+        task local:test

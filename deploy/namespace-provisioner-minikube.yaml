@@ -1,0 +1,38 @@
+# SPDX-License-Identifier: MIT
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: namespace-provisioner
+  labels:
+    name: namespace-provisioner
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: namespace-provisioner
+    spec:
+      containers:
+      - name: namespace-provisioner
+        image: daimler-tss/namespace-provisioner:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: LOG_LEVEL
+          value: DEBUG
+        - name: CONFIG_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: KUBECONFIG
+          value: /.kube/config
+        volumeMounts:
+        - name: kube-config
+          mountPath: /.kube
+      volumes:
+      - name: kube-config
+        secret:
+          secretName: kube-config
+          items:
+          - key: config
+            path: config
+            mode: 511

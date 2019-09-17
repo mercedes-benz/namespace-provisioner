@@ -1,0 +1,40 @@
+# SPDX-License-Identifier: MIT
+version: '2'
+
+tasks:
+  clean:
+    desc: Clean up workspace
+    cmds:
+    - rm -rf build/
+    - rm -rf vendor/
+    - rm -f config
+
+  prepare:
+    desc: Download required Go packages
+    cmds:
+    - go mod download
+
+  build:
+    desc: Build component
+    cmds:
+    - task: prepare
+    - "{{.GO_BUILD_ENV}} go build -o build/bin/namespace-provisioner -mod=readonly -v"
+
+  test:
+    desc: Test component
+    cmds:
+    - task: prepare
+    - mkdir -p build/coverage-results
+    - mkdir -p build/test-results
+    - TEST_RESULT_DIR=../../build/test-results go test -mod=readonly -coverprofile=build/coverage-results/coverage.out -covermode count -v ./...
+    - go tool cover -html=build/coverage-results/coverage.out -o build/coverage-results/coverage.html
+
+  tidy:
+    desc: Tidy go.mod
+    cmds:
+    - go mod tidy -v
+
+  vendor:
+    desc: Create vendor directory
+    cmds:
+    - go mod vendor -v
