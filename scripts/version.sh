@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: MIT
-set -euo pipefail
+set -eo pipefail
 
 # Get the current tag.
 # If we are currently not on a tag, an empty string is returned.

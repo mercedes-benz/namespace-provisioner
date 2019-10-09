@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: MIT
-set -euo pipefail
+set -eo pipefail
 
 # Echoes the cleaned name of the current branch
 # e.g.
@@ -14,10 +14,10 @@ branch() {
     branch_name=$(git rev-parse --abbrev-ref HEAD)
     if [[ $branch_name == "HEAD" ]]; then
         # Try to get branch name from GitHub Action environment variable
-        if [[ -v GITHUB_REF ]] && [[ -n $GITHUB_REF ]]; then
+        if [[ -n $GITHUB_REF ]]; then
             branch_name=$(echo -n "$GITHUB_REF" | sed 's#refs/heads/##')
         # Try to get branch name from Jenkins environment variable
-        elif [[ -v BRANCH_NAME ]] && [[ -n $BRANCH_NAME ]]; then
+        elif [[ -n $BRANCH_NAME ]]; then
             branch_name=$BRANCH_NAME
         else
             echo "error: detached HEAD" >&2
