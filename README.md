@@ -92,18 +92,21 @@ kubectl create secret generic kube-config --from-file=config --dry-run -oyaml | 
 
 # Create deployment file
 cat << EOF > namespace-provisioner.yaml
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: namespace-provisioner
+  name: namespace-provisioner-deployment
   labels:
-    name: namespace-provisioner
+    app: namespace-provisioner
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: namespace-provisioner
   template:
     metadata:
       labels:
-        name: namespace-provisioner
+        app: namespace-provisioner
     spec:
       containers:
       - name: namespace-provisioner
@@ -139,6 +142,8 @@ kubectl apply -f namespace-provisioner.yaml
 
 For every annotated namespace, all traffic from app _prometheus_ in namespace _kube-system_ to any pod should be allowed.
 Therefore the namespace provisioner should create a corresponding NetworkPolicy.
+
+Please note that the example might require adaptions depending on your Kubernetes version.
 
 Prepare the corresponding namespace-provisioner config in default namespace:
 

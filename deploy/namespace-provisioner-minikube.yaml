@@ -1,16 +1,19 @@
 # SPDX-License-Identifier: MIT
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: namespace-provisioner
+  name: namespace-provisioner-deployment
   labels:
-    name: namespace-provisioner
+    app: namespace-provisioner
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: namespace-provisioner
   template:
     metadata:
       labels:
-        name: namespace-provisioner
+        app: namespace-provisioner
     spec:
       containers:
       - name: namespace-provisioner
