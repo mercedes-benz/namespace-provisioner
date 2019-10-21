@@ -1,0 +1,31 @@
+# SPDX-License-Identifier: MIT
+
+name: Release
+
+on:
+  push:
+    tags:
+    - '*.*.*'
+
+jobs:
+  release-build:
+    runs-on: ubuntu-18.04
+    env:
+      DOCKER_REGISTRY: docker.pkg.github.com/${{github.repository}}
+    steps:
+    - name: Set up task
+      env:
+        TASK_VERSION: 2.6.0
+      run: |
+        sudo bash -c "curl -sL https://taskfile.dev/install.sh | bash -s -- -b /usr/local/bin v${TASK_VERSION}"
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Build
+      run: |
+        DOCKER_REGISTRY="$DOCKER_REGISTRY" task docker:build
+    - name: Test
+      run: |
+        task docker:test
+    - name: Push
+      run: |
+        DOCKER_REGISTRY="$DOCKER_REGISTRY" task docker:push-release DOCKER_USERNAME=anonymous DOCKER_PASSWORD=${{secrets.GITHUB_TOKEN}}
