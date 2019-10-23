@@ -9,7 +9,7 @@
 ###############################################################################
 FROM golang:1.13.0 as build-env
 
-ARG TASK_VERSION=2.6.0
+ARG TASK_VERSION=2.7.0
 
 # Install Task
 WORKDIR /tmp
@@ -23,6 +23,7 @@ WORKDIR /workdir
 COPY go.mod go.mod
 COPY go.sum go.sum
 COPY ./tasks/BuildTasks.yml Taskfile.yml
+
 RUN task prepare
 
 ###############################################################################
@@ -35,13 +36,16 @@ ARG GO_BUILD_ENV="GOOS=linux GOARCH=amd64 CGO_ENABLED=0"
 COPY pkg/controllers pkg/controllers/
 COPY pkg/util pkg/util/
 COPY main.go main.go
+
 RUN task build GO_BUILD_ENV="${GO_BUILD_ENV}"
 
 ###############################################################################
 # TEST
 ###############################################################################
 FROM build as test
+
 ARG BUILD_DATE
+
 RUN task test
 
 ###############################################################################
