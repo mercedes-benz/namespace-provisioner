@@ -35,7 +35,9 @@ ARG GO_BUILD_ENV="GOOS=linux GOARCH=amd64 CGO_ENABLED=0"
 COPY pkg/controllers pkg/controllers/
 COPY pkg/util pkg/util/
 COPY main.go main.go
-RUN task build GO_BUILD_ENV="${GO_BUILD_ENV}"
+RUN task build GO_BUILD_ENV="${GO_BUILD_ENV}" && \
+    chown -R 100:100 ./build/bin/namespace-provisioner && \
+    chmod +x ./build/bin/namespace-provisioner
 
 ###############################################################################
 # TEST
@@ -66,11 +68,9 @@ LABEL org.opencontainers.image.authors="Daimler TSS GmbH" \
       org.opencontainers.image.vendor="Daimler TSS GmbH" \
       org.opencontainers.image.version="${BUILD_VERSION}"
 
-WORKDIR /app
-COPY --chown=100:100 --from=build /workdir/build/bin/namespace-provisioner .
-
-RUN chmod +x ./namespace-provisioner
-
 USER 100
+
+WORKDIR /app
+COPY --from=build /workdir/build/bin/namespace-provisioner .
 
 ENTRYPOINT ["./namespace-provisioner"]
