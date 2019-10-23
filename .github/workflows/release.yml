@@ -22,10 +22,19 @@ jobs:
       uses: actions/checkout@v1
     - name: Build
       run: |
-        DOCKER_REGISTRY="$DOCKER_REGISTRY" task docker:build
+        DOCKER_REGISTRY="${DOCKER_REGISTRY}" task docker:build
     - name: Test
       run: |
         task docker:test
-    - name: Push
+    - name: Push image
       run: |
-        DOCKER_REGISTRY="$DOCKER_REGISTRY" task docker:push-release DOCKER_USERNAME=anonymous DOCKER_PASSWORD=${{secrets.GITHUB_TOKEN}}
+        DOCKER_REGISTRY="${DOCKER_REGISTRY}" task docker:push-release DOCKER_USERNAME=anonymous DOCKER_PASSWORD=${{secrets.GITHUB_TOKEN}}
+    - name: Create release
+      uses: actions/create-release@master
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      with:
+        tag_name: ${{github.ref}}
+        release_name: ${{github.ref}}
+        draft: true
+        prerelease: false
