@@ -18,7 +18,7 @@ tasks:
     desc: Build component
     cmds:
     - task: prepare
-    - "{{.GO_BUILD_ENV}} go build -o build/bin/namespace-provisioner -mod=readonly -v"
+    - '{{.GO_BUILD_ENV}} go build -o build/bin/namespace-provisioner -mod=readonly -v'
 
   test:
     desc: Test component
