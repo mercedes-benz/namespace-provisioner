@@ -69,13 +69,9 @@ LABEL org.opencontainers.image.authors="Daimler TSS GmbH" \
 ENV VERSION=${BUILD_VERSION}
 
 WORKDIR /app
+COPY --chown=100:100 --from=build /workdir/build/bin/namespace-provisioner .
 
-COPY --from=build /workdir/build/bin/namespace-provisioner .
-
-COPY LICENSE /LICENSE
-
-RUN chown -R 100:100 . && \
-    chmod +x namespace-provisioner
+RUN chmod +x ./namespace-provisioner
 
 USER 100
 
