@@ -58,7 +58,7 @@ In order to build the _namespace-provisioner_ Docker image from source you need 
 task docker:build
 
 # List images
-docker images daimler-tss/namespace-provisioner
+docker images docker.pkg.github.com/daimler/namespace-provisioner/namespace-provisioner
 ```
 
 ## Usage
@@ -110,7 +110,7 @@ spec:
     spec:
       containers:
       - name: namespace-provisioner
-        image: daimler-tss/namespace-provisioner:latest
+        image: docker.pkg.github.com/daimler/namespace-provisioner/namespace-provisioner:latest
         imagePullPolicy: IfNotPresent
         env:
         - name: LOG_LEVEL

@@ -49,34 +49,26 @@ RUN task test
 ###############################################################################
 FROM alpine:latest
 
-ARG BUILD_TAG
 ARG BUILD_DATE
-ARG BUILD_VERSION
 ARG VCS_REF
+ARG BUILD_TAG
+ARG BUILD_VERSION
 
 LABEL org.opencontainers.image.authors="Daimler TSS GmbH" \
-      org.opencontainers.image.vendor="Daimler TSS GmbH" \
-      org.opencontainers.image.title="namespace-provisioner:${BUILD_TAG}" \
-      org.opencontainers.image.description="A Kubernetes operator creating k8s resources by annotating namespaces." \
       org.opencontainers.image.created="${BUILD_DATE}" \
-      org.opencontainers.image.version="${BUILD_VERSION}" \
-      org.opencontainers.image.revision="${VCS_REF}" \
-      org.opencontainers.image.url="https://github.com/Daimler/namespace-provisioner" \
+      org.opencontainers.image.description="A Kubernetes operator creating k8s resources by annotating namespaces." \
       org.opencontainers.image.documentation="https://github.com/Daimler/namespace-provisioner/blob/master/README.md" \
+      org.opencontainers.image.licenses="MIT" \
+      org.opencontainers.image.revision="${VCS_REF}" \
       org.opencontainers.image.source="https://github.com/Daimler/namespace-provisioner" \
-      org.opencontainers.image.licenses="MIT"
-
-ENV VERSION=${BUILD_VERSION}
-
-WORKDIR /app
-
-COPY --from=build /workdir/build/bin/namespace-provisioner .
-
-COPY LICENSE /LICENSE
-
-RUN chown -R 100:100 . && \
-    chmod +x namespace-provisioner
+      org.opencontainers.image.title="namespace-provisioner:${BUILD_TAG}" \
+      org.opencontainers.image.url="https://github.com/Daimler/namespace-provisioner" \
+      org.opencontainers.image.vendor="Daimler TSS GmbH" \
+      org.opencontainers.image.version="${BUILD_VERSION}"
 
 USER 100
+
+WORKDIR /app
+COPY --chown=100:100 --from=build /workdir/build/bin/namespace-provisioner .
 
 ENTRYPOINT ["./namespace-provisioner"]
