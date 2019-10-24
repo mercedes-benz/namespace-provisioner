@@ -7,9 +7,9 @@
 ###############################################################################
 # SET UP BUILD-ENV
 ###############################################################################
-FROM golang:1.13.0 as build-env
+FROM golang:1.13.3 as build-env
 
-ARG TASK_VERSION=2.6.0
+ARG TASK_VERSION=2.7.0
 
 # Install Task
 WORKDIR /tmp
@@ -70,5 +70,6 @@ USER 100
 
 WORKDIR /app
 COPY --chown=100:100 --from=build /workdir/build/bin/namespace-provisioner .
+COPY LICENSE /LICENSE
 
 ENTRYPOINT ["./namespace-provisioner"]
