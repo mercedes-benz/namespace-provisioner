@@ -70,5 +70,6 @@ USER 100
 
 WORKDIR /app
 COPY --chown=100:100 --from=build /workdir/build/bin/namespace-provisioner .
+COPY LICENSE /LICENSE
 
 ENTRYPOINT ["./namespace-provisioner"]
