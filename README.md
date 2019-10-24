@@ -204,7 +204,7 @@ kube-system.app.prometheus-allow-all   <none>         13s
 
 ### Multi-stage build
 
-To build the Docker image from source you need [Task](https://taskfile.dev/#/) (&geq; 2.6.0) and [Docker](https://www.docker.com/) (&geq; 18.09).
+To build the Docker image from source you need [Task](https://taskfile.dev/#/) (&geq; 2.7.0) and [Docker](https://www.docker.com/) (&geq; 18.09).
 
 ```bash
 # Build Go binary and Docker image
@@ -216,7 +216,7 @@ task docker:test
 
 ### Local build
 
-To build and test the operator on your local OS you need [Task](https://taskfile.dev/#/) (&geq; 2.6.0) and [Go](https://golang.org/) (&geq; 1.11).
+To build and test the operator on your local OS you need [Task](https://taskfile.dev/#/) (&geq; 2.7.0) and [Go](https://golang.org/) (&geq; 1.11).
 
 ```bash
 # Build Go binary
