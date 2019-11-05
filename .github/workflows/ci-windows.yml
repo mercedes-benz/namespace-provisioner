@@ -31,14 +31,18 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
     - name: Clean
+      shell: bash
       run: |
-        %HOMEDRIVE%%HOMEPATH%/scoop/apps/task/current/task local:clean
+        ${HOMEDRIVE}${HOMEPATH}/scoop/apps/task/current/task local:clean
     - name: Prepare
+      shell: bash
       run: |
-        %HOMEDRIVE%%HOMEPATH%/scoop/apps/task/current/task local:prepare
+        ${HOMEDRIVE}${HOMEPATH}/scoop/apps/task/current/task local:prepare
     - name: Build
+      shell: bash
       run: |
-        %HOMEDRIVE%%HOMEPATH%/scoop/apps/task/current/task local:build
+        ${HOMEDRIVE}${HOMEPATH}/scoop/apps/task/current/task local:build
     - name: Test
+      shell: bash
       run: |
-        %HOMEDRIVE%%HOMEPATH%/scoop/apps/task/current/task local:test
+        ${HOMEDRIVE}${HOMEPATH}/scoop/apps/task/current/task local:test
