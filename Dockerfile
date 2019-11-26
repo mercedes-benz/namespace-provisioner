@@ -9,7 +9,7 @@
 ###############################################################################
 FROM golang:1.13.3 as build-env
 
-ARG TASK_VERSION=2.7.0
+ARG TASK_VERSION=2.7.1
 
 # Install Task
 WORKDIR /tmp
