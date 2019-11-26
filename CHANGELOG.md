@@ -4,9 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.1.0] - 2019-11-26
+
 ### Added
 
-* Release workflow
+* Docker image is now available on [GitHub Packages](https://github.com/Daimler/namespace-provisioner/packages/)
 
 ### Changed
 
