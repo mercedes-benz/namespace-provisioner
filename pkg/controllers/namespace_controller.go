@@ -58,7 +58,7 @@ func (r *NamespaceReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 		var configs []string
 		if namespaceAnnotationVal, ok := namespaceInstance.ObjectMeta.Annotations[namespaceConfigMapAnnotation]; ok {
 
-			logger.Info(fmt.Sprintf("Handle event for namespace %s with annotation %s=%s", namespaceName, namespaceConfigMapAnnotation,namespaceAnnotationVal))
+			logger.Info(fmt.Sprintf("Handle event for namespace %s with annotation %s=%s", namespaceName, namespaceConfigMapAnnotation, namespaceAnnotationVal))
 			configs, err = r.addConfigFromConfigMap(configs, namespaceAnnotationVal, namespaceInstance)
 			if err != nil {
 				return ctrl.Result{}, err

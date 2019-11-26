@@ -22,7 +22,7 @@ jobs:
         go-version: 1.13
     - name: Set up task
       env:
-        TASK_VERSION: 2.7.0
+        TASK_VERSION: 2.7.1
       shell: powershell
       run: |
         iex (new-object net.webclient).downloadstring('https://get.scoop.sh')

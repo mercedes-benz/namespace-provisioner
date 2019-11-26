@@ -10,22 +10,22 @@ tasks:
   build:
     desc: Multi-stage build compile in docker and create the image with default tags
     vars:
-      BUILD_ARGS: '--build-arg BUILD_TAG={{.BUILD_TAG}} --build-arg BUILD_DATE={{.BUILD_DATE}} --build-arg BUILD_VERSION={{.BUILD_VERSION}} --build-arg VCS_REF={{.VCS_REF}} {{.PROXY_ARGS}}'
+      BUILD_ARGS: '--build-arg BUILD_DATE={{.BUILD_DATE}} --build-arg BUILD_VERSION={{.BUILD_VERSION}} --build-arg VCS_REF={{.VCS_REF}} {{.PROXY_ARGS}}'
     cmds:
-    - '{{.DOCKER_BUILDKIT }} docker build --tag {{.DOCKER_REGISTRY}}/{{.IMAGE_NAME}}:{{.IMAGE_VERSION}} --no-cache={{.NO_CACHE}} {{.BUILD_ARGS}} .'
+    - '{{.DOCKER_BUILDKIT }} docker build --pull --tag {{.DOCKER_REGISTRY}}/{{.IMAGE_NAME}}:{{.BUILD_VERSION}} --no-cache={{.NO_CACHE}} {{.BUILD_ARGS}} .'
     - task: tag
       vars:
         DOCKER_REGISTRY: '{{.DOCKER_REGISTRY}}'
         IMAGE_NAME: '{{.IMAGE_NAME}}'
-        IMAGE_VERSION: '{{.IMAGE_VERSION}}'
-        IMAGE_VERSION_SHORT: '{{.IMAGE_VERSION_SHORT}}'
+        BUILD_VERSION: '{{.BUILD_VERSION}}'
+        BUILD_VERSION_SHORT: '{{.BUILD_VERSION_SHORT}}'
 
   test:
     desc: Multi-stage run tests and copy build directory to local machine
     vars:
-      BUILD_ARGS: '--build-arg BUILD_TAG={{.BUILD_TAG}} --build-arg BUILD_DATE={{.BUILD_DATE}} --build-arg BUILD_VERSION={{.BUILD_VERSION}} --build-arg VCS_REF={{.VCS_REF}} {{.PROXY_ARGS}}'
+      BUILD_ARGS: '--build-arg BUILD_DATE={{.BUILD_DATE}} --build-arg BUILD_VERSION={{.BUILD_VERSION}} --build-arg VCS_REF={{.VCS_REF}} {{.PROXY_ARGS}}'
     cmds:
-    - '{{.DOCKER_BUILDKIT}} docker build --progress=plain --target test --tag {{.IMAGE_NAME}}-test:{{.VCS_REF}} {{.BUILD_ARGS}} .'
+    - '{{.DOCKER_BUILDKIT}} docker build --pull --progress=plain --target test --tag {{.IMAGE_NAME}}-test:{{.VCS_REF}} {{.BUILD_ARGS}} .'
     - |-
       # Clean build directory
       rm -rf build &&
@@ -39,11 +39,11 @@ tasks:
   tag:
     desc: Tag docker images
     cmds:
-    - docker tag {{.DOCKER_REGISTRY}}/{{.IMAGE_NAME}}:{{.IMAGE_VERSION}} {{.DOCKER_REGISTRY}}/{{.IMAGE_NAME}}:{{.IMAGE_VERSION_SHORT}}
-    - docker tag {{.DOCKER_REGISTRY}}/{{.IMAGE_NAME}}:{{.IMAGE_VERSION}} {{.DOCKER_REGISTRY}}/{{.IMAGE_NAME}}:latest
+    - docker tag {{.DOCKER_REGISTRY}}/{{.IMAGE_NAME}}:{{.BUILD_VERSION}} {{.DOCKER_REGISTRY}}/{{.IMAGE_NAME}}:{{.BUILD_VERSION_SHORT}}
+    - docker tag {{.DOCKER_REGISTRY}}/{{.IMAGE_NAME}}:{{.BUILD_VERSION}} {{.DOCKER_REGISTRY}}/{{.IMAGE_NAME}}:latest
 
   push-release:
     desc: Push image to {{.DOCKER_REGISTRY}}
     cmds:
     - docker login docker.pkg.github.com --username {{.DOCKER_USERNAME}} --password {{.DOCKER_PASSWORD}}
-    - docker push {{.DOCKER_REGISTRY}}/{{.IMAGE_NAME}}:{{.IMAGE_VERSION_SHORT}}
+    - docker push {{.DOCKER_REGISTRY}}/{{.IMAGE_NAME}}:{{.BUILD_VERSION_SHORT}}

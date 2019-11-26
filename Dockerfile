@@ -7,9 +7,9 @@
 ###############################################################################
 # SET UP BUILD-ENV
 ###############################################################################
-FROM golang:1.13.3 as build-env
+FROM golang:1.13 as build-env
 
-ARG TASK_VERSION=2.7.0
+ARG TASK_VERSION=2.7.1
 
 # Install Task
 WORKDIR /tmp
@@ -51,17 +51,18 @@ FROM alpine:latest
 
 ARG BUILD_DATE
 ARG VCS_REF
-ARG BUILD_TAG
 ARG BUILD_VERSION
 
-LABEL org.opencontainers.image.authors="Daimler TSS GmbH" \
+LABEL com.daimler.namespace-provisioner.license="MIT" \
+      com.daimler.namespace-provisioner.license-url="https://github.com/Daimler/namespace-provisioner/blob/master/LICENSE" \
+      org.opencontainers.image.authors="Daimler TSS GmbH" \
       org.opencontainers.image.created="${BUILD_DATE}" \
       org.opencontainers.image.description="A Kubernetes operator creating k8s resources by annotating namespaces." \
       org.opencontainers.image.documentation="https://github.com/Daimler/namespace-provisioner/blob/master/README.md" \
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.revision="${VCS_REF}" \
       org.opencontainers.image.source="https://github.com/Daimler/namespace-provisioner" \
-      org.opencontainers.image.title="namespace-provisioner:${BUILD_TAG}" \
+      org.opencontainers.image.title="Namespace Provisioner" \
       org.opencontainers.image.url="https://github.com/Daimler/namespace-provisioner" \
       org.opencontainers.image.vendor="Daimler TSS GmbH" \
       org.opencontainers.image.version="${BUILD_VERSION}"

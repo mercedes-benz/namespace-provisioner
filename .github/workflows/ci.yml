@@ -18,7 +18,7 @@ jobs:
     steps:
     - name: Set up task
       env:
-        TASK_VERSION: 2.7.0
+        TASK_VERSION: 2.7.1
       run: |
         sudo bash -c "curl -sLSf https://taskfile.dev/install.sh | bash -s -- -b /usr/local/bin v${TASK_VERSION}"
     - name: Checkout
@@ -44,7 +44,7 @@ jobs:
         go-version: ${{ matrix.go }}
     - name: Set up task
       env:
-        TASK_VERSION: 2.7.0
+        TASK_VERSION: 2.7.1
       run: |
         sudo bash -c "curl -sLSf https://taskfile.dev/install.sh | bash -s -- -b /usr/local/bin v${TASK_VERSION}"
     - name: Checkout
