@@ -34,6 +34,12 @@ tasks:
     cmds:
     - go mod tidy -v
 
+  update-dependencies:
+    desc: Update dependencies
+    cmds:
+    - go get -u -t ./...
+    - task: tidy
+
   vendor:
     desc: Create vendor directory
     cmds:
