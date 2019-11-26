@@ -3,15 +3,13 @@ version: '2'
 
 vars:
   PROJECT_NAME: namespace-provisioner
-  IMAGE_NAME: '{{.PROJECT_NAME}}'
-  IMAGE_VERSION: {sh: bash ./scripts/version.sh}
-  IMAGE_VERSION_SHORT: {sh: bash ./scripts/version.sh --short}
-  DOCKER_REGISTRY: '{{lower (default "docker.pkg.github.com/daimler/namespace-provisioner" .DOCKER_REGISTRY)}}'
-  BUILD_VERSION: '{{.IMAGE_VERSION}}'
-  BUILD_TAG: '{{.IMAGE_VERSION}}'
+  BUILD_VERSION: {sh: bash ./scripts/version.sh}
+  BUILD_VERSION_SHORT: {sh: bash ./scripts/version.sh --short}
   BUILD_DATE: {sh: "date -u +%Y-%m-%dT%H:%M:%SZ"}
   BRANCH: {sh: bash ./scripts/branch.sh}
   VCS_REF: {sh: git rev-parse --short HEAD}
   GO_BUILD_ENV: GOOS=linux GOARCH=amd64 CGO_ENABLED=0
+  IMAGE_NAME: '{{.PROJECT_NAME}}'
+  DOCKER_REGISTRY: '{{lower (default "docker.pkg.github.com/Daimler/namespace-provisioner" .DOCKER_REGISTRY)}}'
   CONTEXT_2_DEPLOY: minikube
   NAMESPACE_2_DEPLOY: default
