@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+* Dependencies updated
+
 ## [1.1.0] - 2019-11-26
 
 ### Added
@@ -13,7 +17,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-* Reduce docker image size
+* Docker image size reduced
 
 ## [1.0.0] - 2019-09-18
 

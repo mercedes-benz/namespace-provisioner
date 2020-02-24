@@ -15,11 +15,7 @@ import (
 	"k8s.io/client-go/rest"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
-	// +kubebuilder:scaffold:imports
 )
-
-// These tests use Ginkgo (BDD-style Go testing framework). Refer to
-// http://onsi.github.io/ginkgo/ to learn more about Ginkgo.
 
 var cfg *rest.Config
 var k8sClient client.Client
@@ -32,12 +28,12 @@ func TestAPIs(t *testing.T) {
 	"Controller Suite",
 	[]Reporter{envtest.NewlineReporter{}}) */
 
-	resultdir, present := os.LookupEnv("TEST_RESULT_DIR")
+	resultDir, present := os.LookupEnv("TEST_RESULT_DIR")
 	if !present {
-		resultdir = "build/test-results"
+		resultDir = "build/test-results"
 	}
-	_ = os.MkdirAll(resultdir, os.ModePerm)
-	junitReporter := reporters.NewJUnitReporter(filepath.Join(resultdir, "tests-junit-report.xml"))
+	_ = os.MkdirAll(resultDir, os.ModePerm)
+	junitReporter := reporters.NewJUnitReporter(filepath.Join(resultDir, "tests-junit-report.xml"))
 	ginkgoconfig.DefaultReporterConfig.Verbose = true
 	RunSpecsWithDefaultAndCustomReporters(t, "Controller Suite", []Reporter{junitReporter})
 }

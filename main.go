@@ -10,10 +10,8 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
-	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
-	// +kubebuilder:scaffold:imports
 )
 
 var (
@@ -25,7 +23,6 @@ func init() {
 	_ = clientgoscheme.AddToScheme(scheme)
 
 	_ = corev1.AddToScheme(scheme)
-	// +kubebuilder:scaffold:scheme
 }
 
 func main() {
@@ -39,9 +36,9 @@ func main() {
 	logLevel := util.GetLogLevel(setupLog)
 
 	if logLevel == "DEBUG" {
-		ctrl.SetLogger(zap.Logger(true))
+		ctrl.SetLogger(zap.New(zap.UseDevMode(true)))
 	} else {
-		ctrl.SetLogger(zap.Logger(false))
+		ctrl.SetLogger(zap.New(zap.UseDevMode(false)))
 	}
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
@@ -64,7 +61,6 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "Namespace")
 		os.Exit(1)
 	}
-	// +kubebuilder:scaffold:builder
 
 	setupLog.Info("starting manager")
 	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
