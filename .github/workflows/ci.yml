@@ -1,5 +1,4 @@
 # SPDX-License-Identifier: MIT
-
 name: CI
 
 on:
@@ -7,35 +6,42 @@ on:
     branches:
     - master
     - feature/*
+    paths-ignore:
+    - '**.md'
+
+env:
+  TASK_VERSION: 2.8.0
 
 jobs:
   docker-build:
-    name: Docker build
+    name: Docker build on Ubuntu
     strategy:
       matrix:
         os: [ubuntu-16.04, ubuntu-18.04]
+        go: [1.13]
     runs-on: ${{ matrix.os }}
     steps:
     - name: Set up task
-      env:
-        TASK_VERSION: 2.7.1
       run: |
-        sudo bash -c "curl -sLSf https://taskfile.dev/install.sh | bash -s -- -b /usr/local/bin v${TASK_VERSION}"
+        sudo bash -c "curl -fsSL https://taskfile.dev/install.sh | bash -s -- -b /usr/local/bin v${{ env.TASK_VERSION }}"
+    - name: Set up environment variables
+      run: |
+        echo "::set-env name=DOCKER_REGISTRY::$(echo -n 'docker.pkg.github.com/${{ github.repository }}' | tr '[:upper:]' '[:lower:]')"
     - name: Checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
     - name: Build
       run: |
-        task docker:build
+        task docker:build DOCKER_REGISTRY="${DOCKER_REGISTRY}"
     - name: Test
       run: |
         task docker:test
 
-  local-build:
-    name: Local build
+  local-build-ubuntu:
+    name: Local build on Ubuntu
     strategy:
       matrix:
         os: [ubuntu-16.04, ubuntu-18.04]
-        go: [1.11, 1.12, 1.13]
+        go: [1.13]
     runs-on: ${{ matrix.os }}
     steps:
     - name: Set up Go
@@ -43,12 +49,10 @@ jobs:
       with:
         go-version: ${{ matrix.go }}
     - name: Set up task
-      env:
-        TASK_VERSION: 2.7.1
       run: |
-        sudo bash -c "curl -sLSf https://taskfile.dev/install.sh | bash -s -- -b /usr/local/bin v${TASK_VERSION}"
+        sudo bash -c "curl -fsSL https://taskfile.dev/install.sh | bash -s -- -b /usr/local/bin v${{ env.TASK_VERSION }}"
     - name: Checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
     - name: Clean
       run: |
         task local:clean
@@ -59,5 +63,39 @@ jobs:
       run: |
         task local:build
     - name: Test
+      run: |
+        task local:test
+
+  local-build-windows:
+    name: Local build on Windows
+    runs-on: windows-2019
+    steps:
+    - name: Set up Go
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13
+    - name: Set up task
+      shell: powershell
+      run: |
+        iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
+        scoop bucket add extras
+        scoop install task@${{ env.TASK_VERSION }}
+        echo "::add-path::$Env:HOMEDRIVE$Env:HOMEPATH\scoop\shims"
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Clean
+      shell: bash
+      run: |
+        task local:clean
+    - name: Prepare
+      shell: bash
+      run: |
+        task local:prepare
+    - name: Build
+      shell: bash
+      run: |
+        task local:build
+    - name: Test
+      shell: bash
       run: |
         task local:test
