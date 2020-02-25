@@ -9,7 +9,7 @@ vars:
   PROJECT_NAME: namespace-provisioner
   BUILD_VERSION: {sh: bash ./scripts/version.sh}
   BUILD_VERSION_SHORT: {sh: bash ./scripts/version.sh --short}
-  BUILD_DATE: {sh: date -u +%Y-%m-%dT%H:%M:%SZ}
+  BUILD_DATE: '{{dateInZone "2006-01-02T15:04:05Z" now "UTC"}}'
   BRANCH: {sh: bash ./scripts/branch.sh}
   VCS_REF: {sh: git rev-parse --short HEAD}
   GO_BUILD_ENV: GOOS=linux GOARCH=amd64 CGO_ENABLED=0
