@@ -12,7 +12,8 @@ tasks:
     vars:
       BUILD_ARGS: '--build-arg BUILD_DATE={{.BUILD_DATE}} --build-arg VCS_REF={{.VCS_REF}} --build-arg BUILD_VERSION={{.BUILD_VERSION}} {{.PROXY_ARGS}}'
     cmds:
-    - '{{.DOCKER_BUILDKIT}} docker build --tag {{.DOCKER_REGISTRY}}/{{.IMAGE_NAME}}:{{.BUILD_VERSION}} --pull --no-cache={{.NO_CACHE}} {{.BUILD_ARGS}} .'
+    - |-
+      {{.DOCKER_BUILDKIT}} docker build --tag {{.DOCKER_REGISTRY}}/{{.IMAGE_NAME}}:{{.BUILD_VERSION}} --pull --no-cache={{.NO_CACHE}} {{.BUILD_ARGS}} .
     - task: tag
       vars:
         DOCKER_REGISTRY: '{{.DOCKER_REGISTRY}}'
@@ -25,7 +26,8 @@ tasks:
     vars:
       BUILD_ARGS: '--build-arg BUILD_DATE={{.BUILD_DATE}} --build-arg VCS_REF={{.VCS_REF}} --build-arg BUILD_VERSION={{.BUILD_VERSION}} {{.PROXY_ARGS}}'
     cmds:
-    - '{{.DOCKER_BUILDKIT}} docker build --pull --progress=plain --target test --tag {{.IMAGE_NAME}}-test:{{.VCS_REF}} {{.BUILD_ARGS}} .'
+    - |-
+      {{.DOCKER_BUILDKIT}} docker build --pull --progress=plain --target test --tag {{.IMAGE_NAME}}-test:{{.VCS_REF}} {{.BUILD_ARGS}} .
     - |-
       # Clean build directory
       rm -rf build &&
