@@ -4,13 +4,13 @@ version: '2'
 vars:
   PROXY_ARGS: '{{if .DOCKER_HTTP_PROXY }}--build-arg http_proxy={{.DOCKER_HTTP_PROXY}} --build-arg HTTP_PROXY={{.DOCKER_HTTP_PROXY}} --build-arg https_proxy={{.DOCKER_HTTP_PROXY}} --build-arg HTTPS_PROXY={{.DOCKER_HTTP_PROXY}}{{end}}'
   DOCKER_BUILDKIT: 'DOCKER_BUILDKIT={{if eq OS "windows"}}0{{else}}1{{end}}'
-  NO_CACHE: '{{default false .NO_CACHE}}'
 
 tasks:
   build:
     desc: Multi-stage build compile in Docker and create the image with default tags
     vars:
       BUILD_ARGS: '--build-arg BUILD_DATE={{.BUILD_DATE}} --build-arg VCS_REF={{.VCS_REF}} --build-arg BUILD_VERSION={{.BUILD_VERSION}} {{.PROXY_ARGS}}'
+      NO_CACHE: '{{default false .NO_CACHE}}'
     cmds:
     - |-
       {{.DOCKER_BUILDKIT}} docker build --tag {{.DOCKER_REGISTRY}}/{{.IMAGE_NAME}}:{{.BUILD_VERSION}} --pull --no-cache={{.NO_CACHE}} {{.BUILD_ARGS}} .
