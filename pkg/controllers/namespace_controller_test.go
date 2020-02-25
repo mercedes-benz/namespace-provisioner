@@ -6,7 +6,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	corev1 "k8s.io/api/core/v1"
-	"k8s.io/api/extensions/v1beta1"
+	"k8s.io/api/networking/v1beta1"
 	apiErrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -40,10 +40,20 @@ var _ = Describe("NamespaceController", func() {
 				Namespace: "config-namespace",
 			},
 			Data: map[string]string{
-				"my-ingress": `{ "apiVersion": "extensions/v1beta1", "kind": "Ingress",
-											"metadata": {"name": "test-ingress"	},
-											"spec": { "backend": {	"serviceName": "testsvc","servicePort": 80	}}
-										}`,
+				"my-ingress": `
+								{
+								    "apiVersion": "networking.k8s.io/v1beta1",
+								    "kind": "Ingress",
+								    "metadata": {
+								        "name": "test-ingress"
+								    },
+								    "spec": {
+								        "backend": {
+								            "serviceName": "testsvc",
+								            "servicePort": 80
+								        }
+								    }
+								}`,
 			},
 		}
 
