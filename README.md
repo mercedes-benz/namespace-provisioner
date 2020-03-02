@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: MIT -->
 # Namespace Provisioner
 
-[![CI](https://github.com/Daimler/namespace-provisioner/workflows/CI/badge.svg)](https://github.com/Daimler/namespace-provisioner)
+[![CI](https://github.com/Daimler/namespace-provisioner/workflows/CI/badge.svg)](https://github.com/Daimler/namespace-provisioner/actions?query=workflow%3ACI)
 [![Go Report Card](https://goreportcard.com/badge/github.com/Daimler/namespace-provisioner)](https://goreportcard.com/report/github.com/Daimler/namespace-provisioner)
 [![MIT License](https://img.shields.io/github/license/Daimler/namespace-provisioner)](https://github.com/Daimler/namespace-provisioner/blob/master/LICENSE)
 [![GitHub Release](https://img.shields.io/github/v/release/Daimler/namespace-provisioner?sort=semver)](https://github.com/Daimler/namespace-provisioner/releases/latest)

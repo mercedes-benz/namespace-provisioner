@@ -10,7 +10,7 @@ tasks:
     - rm -f config
 
   prepare:
-    desc: Download required Go packages
+    desc: Download required Go modules
     cmds:
     - go mod download
 

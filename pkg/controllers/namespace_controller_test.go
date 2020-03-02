@@ -15,7 +15,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
-	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
+	"sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
 
 var _ = Describe("NamespaceController", func() {
@@ -31,7 +31,7 @@ var _ = Describe("NamespaceController", func() {
 	BeforeEach(func() {
 
 		// Set the logger to development mode for verbose logs.
-		logf.SetLogger(logf.ZapLogger(true))
+		log.SetLogger(log.ZapLogger(true))
 
 		// config map in the config-namespace, containing the spec for a ingress
 		configMapWithIngressSpec = &corev1.ConfigMap{
@@ -40,8 +40,7 @@ var _ = Describe("NamespaceController", func() {
 				Namespace: "config-namespace",
 			},
 			Data: map[string]string{
-				"my-ingress": `
-								{
+				"my-ingress": `{
 								    "apiVersion": "networking.k8s.io/v1beta1",
 								    "kind": "Ingress",
 								    "metadata": {
