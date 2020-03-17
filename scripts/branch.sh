@@ -14,6 +14,7 @@ branch() {
     branch_name=$(git rev-parse --abbrev-ref HEAD)
     if [[ $branch_name == "HEAD" ]]; then
         # Try to get branch name from GitHub Action environment variable
+        # shellcheck disable=SC2153
         if [[ -n $GITHUB_REF ]]; then
             branch_name=$(echo -n "$GITHUB_REF" | sed 's#refs/heads/##')
         # Try to get branch name from Jenkins environment variable
