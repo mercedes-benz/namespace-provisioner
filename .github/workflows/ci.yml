@@ -66,13 +66,17 @@ jobs:
         task local:test
 
   local-build-windows:
-    name: Local build (windows-2019)
-    runs-on: windows-2019
+    name: Local build
+    strategy:
+      matrix:
+        os: [windows-2019]
+        go: [1.13, 1.14]
+    runs-on: ${{ matrix.os }}
     steps:
     - name: Set up Go
       uses: actions/setup-go@v1
       with:
-        go-version: 1.13
+        go-version: ${{ matrix.go }}
     - name: Set up task
       shell: powershell
       run: |
