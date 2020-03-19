@@ -4,22 +4,39 @@ version: '2'
 includes:
   local: ./tasks/BuildTasks.yml
   docker: ./tasks/DockerTasks.yml
-  globalVars: ./Taskvars.yml
+
+vars:
+  PROJECT_NAME: namespace-provisioner
+  BUILD_VERSION: {sh: bash ./scripts/version.sh}
+  BUILD_VERSION_SHORT: {sh: bash ./scripts/version.sh --short}
+  BUILD_DATE: '{{dateInZone "2006-01-02T15:04:05Z" now "UTC"}}'
+  BRANCH: {sh: bash ./scripts/branch.sh}
+  VCS_REF: {sh: git rev-parse --short HEAD}
+  GO_BUILD_ENV: GOOS=linux GOARCH=amd64 CGO_ENABLED=0
+  IMAGE_NAME: '{{.PROJECT_NAME}}'
+  DOCKER_REGISTRY: docker.pkg.github.com/daimler/namespace-provisioner
+  KUBE_CONTEXT: minikube
+  NAMESPACE: default
 
 tasks:
+  default:
+    cmds:
+    - task --list
+    silent: true
+
   deploy-secrets:
     desc: Deploy secrets
     cmds:
-    - |
-      kubectl --context={{.CONTEXT_2_DEPLOY}} config view --raw --minify=true --flatten=true | \
+    - |-
+      kubectl --context={{.KUBE_CONTEXT}} config view --raw --minify=true --flatten=true | \
       sed 's#server:.*#server: https://kubernetes.default.svc#g' > config
-    - |
-      kubectl --context={{.CONTEXT_2_DEPLOY}} create secret generic kube-config --from-file=config --dry-run --output=yaml | \
-      kubectl --context={{.CONTEXT_2_DEPLOY}} --namespace {{.NAMESPACE_2_DEPLOY}} apply -f -
+    - |-
+      kubectl --context={{.KUBE_CONTEXT}} --namespace={{.NAMESPACE}} create secret generic kube-config --from-file=config --dry-run --output=yaml | \
+      kubectl --context={{.KUBE_CONTEXT}} --namespace={{.NAMESPACE}} apply -f -
     - rm config
 
   deploy-local:
     desc: Deploy namespace-provisioner
     cmds:
-    - kubectl --context={{.CONTEXT_2_DEPLOY}} --namespace={{.NAMESPACE_2_DEPLOY}} delete --filename=deploy/namespace-provisioner-{{.CONTEXT_2_DEPLOY}}.yaml --ignore-not-found
-    - kubectl --context={{.CONTEXT_2_DEPLOY}} --namespace={{.NAMESPACE_2_DEPLOY}} apply --filename=deploy/namespace-provisioner-{{.CONTEXT_2_DEPLOY}}.yaml
+    - kubectl --context={{.KUBE_CONTEXT}} --namespace={{.NAMESPACE}} delete --filename=deploy/namespace-provisioner-{{.KUBE_CONTEXT}}.yaml --ignore-not-found
+    - kubectl --context={{.KUBE_CONTEXT}} --namespace={{.NAMESPACE}} apply --filename=deploy/namespace-provisioner-{{.KUBE_CONTEXT}}.yaml

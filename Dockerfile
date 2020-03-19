@@ -1,19 +1,15 @@
 # SPDX-License-Identifier: MIT
 
-# Conventions:
-# WORKDIR = /workdir
-# Build and test results should be in /workdir/build
-
 ###############################################################################
 # SET UP BUILD-ENV
 ###############################################################################
-FROM golang:1.13 as build-env
+FROM golang:1.14 as build-env
 
-ARG TASK_VERSION=2.7.1
+ARG TASK_VERSION=2.8.0
 
 # Install Task
 WORKDIR /tmp
-RUN curl -sLSfo task.tgz https://github.com/go-task/task/releases/download/v${TASK_VERSION}/task_linux_amd64.tar.gz && \
+RUN curl -fsSLo task.tgz https://github.com/go-task/task/releases/download/v${TASK_VERSION}/task_linux_amd64.tar.gz && \
     mkdir -p task && \
     tar xvf task.tgz -C task && \
     mv task/task /usr/local/bin/ && \
@@ -41,7 +37,7 @@ RUN task build GO_BUILD_ENV="${GO_BUILD_ENV}"
 # TEST
 ###############################################################################
 FROM build as test
-ARG BUILD_DATE
+
 RUN task test
 
 ###############################################################################
@@ -57,11 +53,11 @@ LABEL com.daimler.namespace-provisioner.license="MIT" \
       com.daimler.namespace-provisioner.license-url="https://github.com/Daimler/namespace-provisioner/blob/master/LICENSE" \
       org.opencontainers.image.authors="Daimler TSS GmbH" \
       org.opencontainers.image.created="${BUILD_DATE}" \
-      org.opencontainers.image.description="A Kubernetes operator creating k8s resources by annotating namespaces." \
+      org.opencontainers.image.description="A Kubernetes operator creating K8s resources by annotating namespaces." \
       org.opencontainers.image.documentation="https://github.com/Daimler/namespace-provisioner/blob/master/README.md" \
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.revision="${VCS_REF}" \
-      org.opencontainers.image.source="https://github.com/Daimler/namespace-provisioner" \
+      org.opencontainers.image.source="https://github.com/Daimler/namespace-provisioner.git" \
       org.opencontainers.image.title="Namespace Provisioner" \
       org.opencontainers.image.url="https://github.com/Daimler/namespace-provisioner" \
       org.opencontainers.image.vendor="Daimler TSS GmbH" \

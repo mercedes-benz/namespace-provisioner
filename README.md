@@ -1,9 +1,10 @@
 <!-- SPDX-License-Identifier: MIT -->
-
 # Namespace Provisioner
 
-[![CI](https://github.com/Daimler/namespace-provisioner/workflows/CI/badge.svg)](https://github.com/Daimler/namespace-provisioner)
-[![CI Windows](https://github.com/Daimler/namespace-provisioner/workflows/CI%20Windows/badge.svg)](https://github.com/Daimler/namespace-provisioner)
+[![CI](https://github.com/Daimler/namespace-provisioner/workflows/CI/badge.svg)](https://github.com/Daimler/namespace-provisioner/actions?query=workflow%3ACI)
+[![Go Report Card](https://goreportcard.com/badge/github.com/Daimler/namespace-provisioner)](https://goreportcard.com/report/github.com/Daimler/namespace-provisioner)
+[![MIT License](https://img.shields.io/github/license/Daimler/namespace-provisioner)](https://github.com/Daimler/namespace-provisioner/blob/master/LICENSE)
+[![GitHub Release](https://img.shields.io/github/v/release/Daimler/namespace-provisioner?sort=semver)](https://github.com/Daimler/namespace-provisioner/releases/latest)
 
 The **Namespace Provisioner** is a Kubernetes Operator that facilitates the management of multiple namespaces on kubernetes clusters.
 You can simply annotate a Kubernetes namespace and non-application specific resources like `ImagePullSecrets`, `NetworkPolicies`, `Roles` or `RoleBindings` are automatically deployed to prepare the namespace for application deployment and testing.
@@ -34,7 +35,7 @@ like *image-pull-secrets*, *rbac-rules* or *tiller-deployment*.
   - You can set both annotations if needed.
   - The value for the annotation is a comma separated list of names of your `ConfigMaps` or `Secrets`, e.g. `namespace-provisioner.daimler-tss.com/config=rbac-rules,tiller-deployment`
 
-![Deployment of Namespace Provisioner](docs/img/NamespaceProvisioner.png)
+![Deployment of Namespace Provisioner](docs/img/namespace-provisioner.png)
 
 ## Demo
 
@@ -167,13 +168,13 @@ metadata:
 spec:
   podSelector: {}
   ingress:
-    - from:
-        - namespaceSelector:
-            matchLabels:
-              name: kube-system
-          podSelector:
-            matchLabels:
-              app: prometheus
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: kube-system
+      podSelector:
+        matchLabels:
+          app: prometheus
 EOF
 
 # Deploy namespace-provisioning-networkpolicy ConfigMap
@@ -204,7 +205,7 @@ kube-system.app.prometheus-allow-all   <none>         13s
 
 ### Multi-stage build
 
-To build the Docker image from source you need [Task](https://taskfile.dev/#/) (&geq; 2.7.1) and [Docker](https://www.docker.com/) (&geq; 18.09).
+To build the Docker image from source you need [Task](https://taskfile.dev/#/) (&geq; 2.8.0) and [Docker](https://www.docker.com/) (&geq; 18.09).
 
 ```bash
 # Build Go binary and Docker image
@@ -216,7 +217,7 @@ task docker:test
 
 ### Local build
 
-To build and test the operator on your local OS you need [Task](https://taskfile.dev/#/) (&geq; 2.7.1) and [Go](https://golang.org/) (&geq; 1.11).
+To build and test the operator on your local OS you need [Task](https://taskfile.dev/#/) (&geq; 2.8.0) and [Go](https://golang.org/) (&geq; 1.13).
 
 ```bash
 # Build Go binary

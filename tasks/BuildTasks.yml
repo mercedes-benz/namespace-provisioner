@@ -10,35 +10,38 @@ tasks:
     - rm -f config
 
   prepare:
-    desc: Download required Go packages
+    desc: Download required Go modules
     cmds:
     - go mod download
 
   build:
     desc: Build component
-    cmds:
+    deps:
     - task: prepare
-    - '{{.GO_BUILD_ENV}} go build -o build/bin/namespace-provisioner -mod=readonly -v'
+    cmds:
+    - |-
+      {{.GO_BUILD_ENV}} go build -o build/bin/namespace-provisioner -mod=readonly -v
 
   test:
     desc: Test component
-    cmds:
+    deps:
     - task: prepare
+    cmds:
     - mkdir -p build/coverage-results
     - mkdir -p build/test-results
     - TEST_RESULT_DIR=../../build/test-results go test -mod=readonly -coverprofile=build/coverage-results/coverage.out -covermode count -v ./...
-    - go tool cover -html=build/coverage-results/coverage.out -o build/coverage-results/coverage.html
+    - go tool cover -html build/coverage-results/coverage.out -o build/coverage-results/coverage.html
 
   tidy:
     desc: Tidy go.mod
     cmds:
     - go mod tidy -v
 
-  update-dependencies:
-    desc: Update dependencies
+  show-dependency-updates:
+    desc: Show dependency updates
     cmds:
-    - go get -u -t ./...
-    - task: tidy
+    - |-
+      go list -u -f {{` '{{if (and (not (or .Main .Indirect)) .Update)}}{{.Path}}: {{.Version}} -> {{.Update.Version}}{{end}}' `}} -m all 2>/dev/null
 
   vendor:
     desc: Create vendor directory
