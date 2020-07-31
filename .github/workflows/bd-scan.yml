@@ -1,0 +1,19 @@
+# SPDX-License-Identifier: MIT
+name: CI
+
+on:
+  workflow_dispatch:
+    inputs: {}
+
+jobs:
+  bd-scan:
+    name: Blackduck Scan
+    strategy:
+      matrix:
+        os: [ubuntu-18.04]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Synopsys Detect
+      uses: blackducksoftware/github-action@2.0.0
+      with:
+        args: '--blackduck.url="${{ secrets.BLACKDUCK_URL}}" --blackduck.api.token="${{ secrets.BLACKDUCK_API_TOKEN}}" --detect.risk.report.pdf=true'
