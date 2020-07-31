@@ -17,7 +17,7 @@ jobs:
     name: Docker build
     strategy:
       matrix:
-        os: [ubuntu-16.04, ubuntu-18.04]
+        os: [ubuntu-18.04]
     runs-on: ${{ matrix.os }}
     steps:
     - name: Set up task
@@ -39,7 +39,7 @@ jobs:
     name: Local build
     strategy:
       matrix:
-        os: [ubuntu-16.04, ubuntu-18.04, macos-10.15]
+        os: [ubuntu-18.04]
         go: [1.13, 1.14]
     runs-on: ${{ matrix.os }}
     steps:
@@ -65,40 +65,3 @@ jobs:
       run: |
         task local:test
 
-  local-build-windows:
-    name: Local build
-    strategy:
-      matrix:
-        os: [windows-2019]
-        go: [1.13, 1.14]
-    runs-on: ${{ matrix.os }}
-    steps:
-    - name: Set up Go
-      uses: actions/setup-go@v1
-      with:
-        go-version: ${{ matrix.go }}
-    - name: Set up task
-      shell: powershell
-      run: |
-        iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
-        scoop bucket add extras
-        scoop install task@${{ env.TASK_VERSION }}
-        echo "::add-path::$Env:HOMEDRIVE$Env:HOMEPATH\scoop\shims"
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Clean
-      shell: bash
-      run: |
-        task local:clean
-    - name: Prepare
-      shell: bash
-      run: |
-        task local:prepare
-    - name: Build
-      shell: bash
-      run: |
-        task local:build
-    - name: Test
-      shell: bash
-      run: |
-        task local:test
