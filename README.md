@@ -1,4 +1,6 @@
 <!-- SPDX-License-Identifier: MIT -->
+# :warning: This project is no longer maintained and is archived.
+
 # Namespace Provisioner
 
 [![CI](https://github.com/Daimler/namespace-provisioner/workflows/CI/badge.svg)](https://github.com/Daimler/namespace-provisioner/actions?query=workflow%3ACI)
